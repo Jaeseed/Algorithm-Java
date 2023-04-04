@@ -7,30 +7,56 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 
 public class S1_5107_마니또게임 {
-	static HashMap<String, Integer> hm = new HashMap<>();
-	static int[] relation;
+	static HashMap<String, Integer> hm;
+	static Integer[] relation;
 	public static void main(String[] args) throws IOException {
+		int t = 1;
+		StringBuilder sb = new StringBuilder();
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int N = Integer.parseInt(br.readLine());
-		relation = new int[N];
-		for (int i = 0; i < N; i++) {
-			relation[i] = -1;
-		}
-		int idx = 0;
-		for (int n = 0; n < N; n++) {
-			StringTokenizer st = new StringTokenizer(br.readLine());
-			String parent = st.nextToken();
-			String son = st.nextToken();
-			if (!hm.containsKey(parent)) {
-				hm.put(parent, idx);
-				idx += 1;
+		while(true) {
+			int N = Integer.parseInt(br.readLine());
+			if (N == 0) {
+				break;
 			}
-			if (!hm.containsKey(son)) {
-				hm.put(son, idx);
-				idx += 1;
+			relation = new Integer[N];
+			hm = new HashMap<>();
+			for (int i = 0; i < N; i++) {
+				relation[i] = i;
 			}
-			union(hm.get(parent), hm.get(son));
+			int idx = 0;
+			for (int n = 0; n < N; n++) {
+				StringTokenizer st = new StringTokenizer(br.readLine());
+				String parent = st.nextToken();
+				String son = st.nextToken();
+				if (!hm.containsKey(parent)) {
+					hm.put(parent, idx);
+					idx += 1;
+				}
+				if (!hm.containsKey(son)) {
+					hm.put(son, idx);
+					idx += 1;
+				}
+				union(hm.get(parent), hm.get(son));
+			}
+			for (int i = 0; i < N; i++) {
+				find(i);
+			}
+			int[] tmp = new int[N];
+			for (int n = 0; n < N; n++) {
+				tmp[relation[n]] += 1;
+			}
+			
+			int answer = 0;
+			
+			for (int n = 0; n < N; n++) {
+				if (tmp[n] > 0) {
+					answer += 1;
+				}
+			}
+			sb.append(t + " " + answer+"\n");
+			t += 1;
 		}
+		System.out.println(sb);
 
 	}
 	
