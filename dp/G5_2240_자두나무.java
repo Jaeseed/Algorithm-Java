@@ -39,11 +39,16 @@ public class G5_2240_자두나무 {
 			}
 		}
 		for (int w = 1; w < W+1; w++) {
-			for (int l = 1; l < length+1; l++) {
-				dp[w][l] = Math.max(dp[w-1][l], dp[w-1][l-1] + fruits.get(l-1));
+			dp[w][1] = fruits.get(0);
+			for (int l = 2; l < length+1; l++) {
+				dp[w][l] = Math.max(dp[w-1][l-1] + fruits.get(l-1), dp[w][l-2] + fruits.get(l-1));
 			}
 		}
-		System.out.println(dp[W][length]);
+		int answer = 0;
+		for (int l = 1; l < length+1; l++) {
+			answer = Math.max(answer, dp[W][l]);
+		}
+		System.out.println(answer);
 		
 
 	}
