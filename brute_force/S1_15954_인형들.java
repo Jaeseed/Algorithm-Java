@@ -17,18 +17,17 @@ public class S1_15954_인형들 {
 		for (int n = 0; n < N; n++) {
 			arr[n] = Integer.parseInt(st.nextToken());
 		}
-		for (int u = 0; u <= N-K; u++) {
-			int num = K + u;
-			for (int i = 0; i <= N - num; i++) {
-				int sum = 0;
-				double m = 0;
-				for (int k = 0; k < num; k++) {
+		for (int length = K; length <= N; length++) {
+			for (int i = 0; i <= N - length; i++) {
+				double sum = 0.0;
+				double m = 0.0;
+				for (int k = 0; k < length; k++) {
 					sum += arr[i+k];
 				}
-				m = sum / (double) num;
+				m = sum / (double) length;
 				double variance = 0.0;
-				for (int k = 0; k < num; k++) {
-					variance += Math.pow((m - arr[i + k]), 2);
+				for (int k = 0; k < length; k++) {
+					variance += Math.pow(arr[i + k] - m, 2);
 				}
 				double cand = Math.sqrt(variance / K);
 				if (answer > cand) {
@@ -36,7 +35,7 @@ public class S1_15954_인형들 {
 				}
 			}
 		}
-		System.out.printf("%.6f", answer);
+		System.out.printf("%.7f", answer);
 		
 		
 	}
