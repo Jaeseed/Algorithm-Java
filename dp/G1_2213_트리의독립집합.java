@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.StringTokenizer;
+import java.util.stream.Stream;
 
 public class G1_2213_트리의독립집합 {
 	static class Node {
@@ -42,7 +43,7 @@ public class G1_2213_트리의독립집합 {
 		}
 		Node[] ret = dp(1);
 		int answer = 0;
-		String[] answerRoute;
+		int[] answerRoute;
 		String route = "";
 		if (ret[0].value >= ret[1].value) {
 			answer = ret[0].value;
@@ -52,11 +53,10 @@ public class G1_2213_트리의독립집합 {
 			answer = ret[1].value; 
 			route = ret[1].path.toString();
 		}
-		answerRoute = route.split(" ");
+		answerRoute = Stream.of(route.split(" ")).mapToInt(Integer::parseInt).toArray();
 		Arrays.sort(answerRoute);
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < answerRoute.length; i++) {
-			System.out.println(answerRoute[i]);
 			sb.append(answerRoute[i] + " ");
 		}
 		System.out.println(answer);
@@ -75,17 +75,17 @@ public class G1_2213_트리의독립집합 {
 			Node[] ret = dp(n);
 			if (ret[0].value > ret[1].value) {
 				useValue += ret[0].value;
-				useSb.append(" " + ret[0].path);
+				useSb.append(ret[0].path);
 			}
 			else {
 				useValue += ret[1].value;
-				useSb.append(" " + ret[1].path);
+				useSb.append(ret[1].path);
 			}
 			notUseValue += ret[1].value;
-			notUseSb.append(" " + ret[1].path);
+			notUseSb.append(ret[1].path);
 			
 		}
-		Node useMe = new Node(notUseValue + arr[now], notUseSb.append(" " + now));
+		Node useMe = new Node(notUseValue + arr[now], notUseSb.append(now + " "));
 		Node notUseMe;
 		if (useValue >= notUseValue) {
 			notUseMe = new Node(useValue, useSb);
