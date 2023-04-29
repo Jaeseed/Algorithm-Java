@@ -53,7 +53,6 @@ public class G3_1865_웜홀 {
 				}
 			}
 			System.out.println(answer);
-					
 		}
 
 	}
