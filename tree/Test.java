@@ -3,12 +3,14 @@ package tree;
 public class Test {
 
 	public static void main(String[] args) {
-		long a = 0;
-		for (int i = 0; i <= 1000000; i++) {
-			a += i;
-		}
-		System.out.println(a);
+		int[] a = {1,2,3};
+		test(a);
+		System.out.println(a[1]);
 
+	}
+	static void test(int[] arr) {
+		arr[0] = 0;
+		arr[1] = 7;
 	}
 
 }
