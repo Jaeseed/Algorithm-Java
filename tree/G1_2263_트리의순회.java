@@ -41,6 +41,7 @@ public class G1_2263_트리의순회 {
 				tree(is, i - 1, ps, ps + i - is - 1, in, post);
 				tree(i + 1, ie, ps + i - is, pe - 1, in, post);
 			}
+			break;
 		}
 	}
 }
