@@ -4,9 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class G1_23290_마법사상어와복제 {
@@ -26,6 +24,9 @@ public class G1_23290_마법사상어와복제 {
 	// 상어 위치 정보
 	static int sr;
 	static int sc;
+	
+	static int[][] selectedRoute;
+	static int maxCnt;
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
@@ -94,35 +95,12 @@ public class G1_23290_마법사상어와복제 {
 	}
 	
 	static void sharkMove() {
-		Queue<Move> qu = new LinkedList<>();
-		Move selectedMove = new Move(sr,sc);
-		qu.offer(selectedMove);
-		while (!qu.isEmpty()) {
-			Move now = qu.poll();
-			if (now.step == 3) {
-				if (selectedMove.step == 0 || now.cnt > selectedMove.cnt) {
-					selectedMove = now;
-				}
-				continue;
-			}
-			int r = now.r;
-			int c = now.c;
-			for (int i = 0; i < 4; i++) {
-				int nr = r + dsr[i];
-				int nc = c + dsc[i];
-				if (nr >= 4 || nr < 0 || nc >= 4 || nc < 0) continue;
-				if (now.visited[nr][nc]) {
-					qu.offer(new Move(nr,nc, now.step, now.route, now.cnt, now.visited));
-				}
-				else {
-					qu.offer(new Move(nr,nc, now.step, now.route, now.cnt + fishCnt[nr][nc], now.visited));
-				}
-			}
-		}
-		
+		selectedRoute = new int[3][2];
+		maxCnt = -1;
+		dfs(sr, sc, 0, 0, new int[3][2], new boolean[4][4]);
 		List<int[]> newFishInfo = new ArrayList<>();
 		for (int[] fish : fishInfo) {
-			if(check(fish, selectedMove)) {
+			if(check(fish)) {
 				newFishInfo.add(fish);
 			}
 			else {
@@ -130,56 +108,47 @@ public class G1_23290_마법사상어와복제 {
 				fishCnt[fish[0]][fish[1]] -= 1;
 			}
 		}
-		sr = selectedMove.route[2][0];
-		sc = selectedMove.route[2][1];
+		sr = selectedRoute[2][0];
+		sc = selectedRoute[2][1];
 		fishInfo = newFishInfo;
 		
 	}
 	
-	static boolean check (int[] info, Move move) {
+	static void dfs(int r, int c, int step, int cnt, int[][]route, boolean[][] visited) {
+		if (step == 3) {
+			if (cnt > maxCnt) {
+				maxCnt = cnt;
+				for (int i = 0; i < 3; i++) {
+					selectedRoute[i][0] = route[i][0];
+					selectedRoute[i][1] = route[i][1];
+				}
+			}
+			return;
+		}
+		for (int i = 0; i < 4; i++) {
+			int nr = r + dsr[i];
+			int nc = c + dsc[i];
+			if (nr >= 4 || nr < 0 || nc >= 4 || nc < 0) continue;
+			route[step][0] = nr;
+			route[step][1] = nc;
+			if (visited[nr][nc]) {
+				dfs(nr,nc,step+1,cnt,route, visited);
+			}
+			else {
+				visited[nr][nc] = true;
+				dfs(nr,nc,step+1,cnt + fishCnt[nr][nc],route, visited);
+				visited[nr][nc] = false;
+			}
+		}
+	}
+	
+	static boolean check (int[] info) {
 		for (int i = 0; i < 3; i++) {
-			if (info[0] == move.route[i][0] && info[1] == move.route[i][1]) {
+			if (info[0] == selectedRoute[i][0] && info[1] == selectedRoute[i][1]) {
 				return false;
 			}
 		}
 		return true;
-	}
-	
-	static class Move {
-		int r;
-		int c;
-		int step;
-		int route[][] = new int[3][2];
-		int cnt;
-		boolean[][] visited = new boolean[4][4];
-		
-		Move(int r, int c) {
-			this.r = r;
-			this.c = c;
-			visited[r][c] = true;
-		}
-		
-		Move(int r, int c, int step, int[][] route, int cnt, boolean[][] visited) {
-			this.r = r;
-			this.c = c;
-			for (int i = 0; i < step; i++) {
-				this.route[i][0] = route[i][0];
-				this.route[i][1] = route[i][1];
-			}
-			this.route[step][0] = r;
-			this.route[step][1] = c;
-			this.step = step + 1;
-			this.cnt = cnt;
-			for (int i = 0; i < 4; i++) {
-				for (int j = 0; j < 4; j++) {
-					if(visited[i][j]) {
-						this.visited[i][j] = true;
-					}
-				}
-			}
-			this.visited[r][c] = true;
-		}
-		
 	}
 
 }
